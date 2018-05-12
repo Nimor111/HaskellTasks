@@ -24,7 +24,6 @@ dependencies:
 - diff-parse
 - process
 - text
-- split
 
 library:
   source-dirs: src

@@ -5,7 +5,6 @@ module Lib
     ) where
 
 import           Control.Monad      (when)
-import           Data.List.Split
 import           Data.Text          as T
 import           Data.Text.IO       as TI
 import           System.Environment (getArgs)
@@ -29,7 +28,7 @@ search diff = mapM_ (\x -> when (x `T.isInfixOf` diff) $ writeWordToFile "report
 getDiff :: IO T.Text
 getDiff = do
   args <- getArgs
-  output <- readCreateProcess ((proc "git" ["diff", "HEAD~1", "HEAD~2"]) {cwd=maybeHead args}) ""
+  output <- readCreateProcess ((proc "git" ["diff", "HEAD", "HEAD~1"]) {cwd=maybeHead args}) ""
   return $ T.pack output
 
 readBadWords :: FilePath -> IO [T.Text]
