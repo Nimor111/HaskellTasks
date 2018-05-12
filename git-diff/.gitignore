@@ -1,3 +1,9 @@
 .stack-work/
 git-diff.cabal
 *~
+
+# generated file
+report.html
+
+# test repository
+cpp-test-repo/
