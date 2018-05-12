@@ -1,29 +1,37 @@
 {-# LANGUAGE OverloadedStrings #-}
 
 module Lib
-  ( getDiff, diffIntoLines, readBadWords, search
+  ( getDiff, readBadWords, search, writeReport
     ) where
 
 import           Control.Monad      (when)
 import           Data.Text          as T
-import           Data.Text.IO       as TI
+import           Data.Text.IO       as TI hiding (writeFile)
+import           Html               (makeReport)
+import           Prelude
 import           System.Environment (getArgs)
 import           System.Process     (cwd, proc, readCreateProcess)
-
-diffIntoLines :: IO T.Text -> IO [T.Text]
-diffIntoLines diff = do
-  r <- diff
-  return $ T.lines r
 
 maybeHead :: [a] -> Maybe a
 maybeHead []    = Nothing
 maybeHead (x:_) = Just x
 
-writeWordToFile :: FilePath -> T.Text -> IO()
-writeWordToFile = TI.writeFile
+-- Without Blaze
+-- writeWordToFile :: FilePath -> T.Text -> IO()
+-- writeWordToFile = TI.writeFile
 
-search :: T.Text -> [T.Text] -> IO()
-search diff = mapM_ (\x -> when (x `T.isInfixOf` diff) $ writeWordToFile "report.html" x)
+-- search :: T.Text -> [T.Text] -> [T.Text]
+-- search diff = mapM_ (\x -> when (x `T.isInfixOf` diff) $ writeWordToFile "report.html" x)
+-- Without Blaze
+
+writeReport :: [T.Text] -> IO()
+writeReport wordsList = writeFile "report.html" $ makeReport wordsList
+
+search :: T.Text -> [T.Text] -> [T.Text]
+search diff [] = []
+search diff (word:text)
+  | word `T.isInfixOf` diff = word : search diff text
+  | otherwise = search diff text
 
 getDiff :: IO T.Text
 getDiff = do

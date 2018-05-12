@@ -24,6 +24,7 @@ dependencies:
 - diff-parse
 - process
 - text
+- blaze-html
 
 library:
   source-dirs: src
