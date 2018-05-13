@@ -2,7 +2,7 @@
 {-# LANGUAGE OverloadedStrings #-}
 
 module Lib
-  ( testHTML, Url(..)
+  ( crawl
   ) where
 
 import           Data.Aeson              (FromJSON, ToJSON, encode)
@@ -48,8 +48,8 @@ safeHead :: [a] -> Maybe a
 safeHead []    = Nothing
 safeHead (x:_) = Just x
 
-testHTML :: IO()
-testHTML = do
+crawl :: IO()
+crawl = do
   args <- getArgs
   case safeHead args of
     Nothing -> putStrLn "Usage: cmd searchQuery"
