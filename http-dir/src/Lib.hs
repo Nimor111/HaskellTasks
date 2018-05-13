@@ -44,12 +44,19 @@ writeToFile file lines =  case file of
                             Nothing -> putStrLn "No file found!"
                             Just f  -> B.appendFile  f (urlToJSON lines)
 
+safeHead :: [a] -> Maybe a
+safeHead []    = Nothing
+safeHead (x:_) = Just x
+
 testHTML :: IO()
 testHTML = do
   args <- getArgs
-  doc <- simpleHttp $ "https://dir.bg/search?q=" ++ head args
-  let cursor = fromDocument $ parseLBS doc
-  writeToFile (getItem args 1) (cursor $// getTenAnchors &| extractData)
+  case safeHead args of
+    Nothing -> putStrLn "Usage: cmd searchQuery"
+    Just query -> do
+      doc <- simpleHttp $ "https://dir.bg/search?q=" ++ head args
+      let cursor = fromDocument $ parseLBS doc
+      writeToFile (getItem args 1) (cursor $// getTenAnchors &| extractData)
 
 extractData :: Cursor -> Text
 extractData = concat . attribute "href"
